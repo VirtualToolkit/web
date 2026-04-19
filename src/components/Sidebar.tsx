@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import {
   ChevronRight,
@@ -21,23 +22,51 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
+  const pathname = usePathname();
+
   return (
     <aside
       className="bg-card fixed top-14 bottom-0 left-0 z-40 flex flex-col overflow-hidden transition-[width] duration-300 ease-in-out"
       style={{ width: collapsed ? "3.5rem" : "13.5rem" }}
     >
       <nav className="flex-1 space-y-0.5 overflow-y-auto px-3">
-        <SidebarButton label="Feed" icon={Home} link="/dashboard" active />
+        <SidebarButton
+          label="Feed"
+          icon={Home}
+          link="/dashboard"
+          active={pathname === "/dashboard"}
+        />
         <SidebarButton
           label="Magic Chatbox"
           icon={MessageCircleDashed}
           link="/dashboard/magic-chatbox"
+          active={pathname === "/dashboard/magic-chatbox"}
         />
-        <SidebarGroup label="VRChat" icon={Gamepad} collapsed={collapsed}>
-          <SidebarButton label="Instance" icon={HardDrive} link="/dashboard/vrchat/instance" />
-          <SidebarButton label="Social" icon={BookUser} link="/dashboard/vrchat/social" />
+        <SidebarGroup
+          label="VRChat"
+          icon={Gamepad}
+          collapsed={collapsed}
+          active={pathname.startsWith("/dashboard/vrchat")}
+        >
+          <SidebarButton
+            label="Instance"
+            icon={HardDrive}
+            link="/dashboard/vrchat/instance"
+            active={pathname === "/dashboard/vrchat/instance"}
+          />
+          <SidebarButton
+            label="Social"
+            icon={BookUser}
+            link="/dashboard/vrchat/social"
+            active={pathname === "/dashboard/vrchat/social"}
+          />
         </SidebarGroup>
-        <SidebarButton label="Wrist Overlay" icon={Watch} link="/dashboard" />
+        <SidebarButton
+          label="Wrist Overlay"
+          icon={Watch}
+          link="/dashboard/wrist-overlay"
+          active={pathname === "/dashboard/wrist-overlay"}
+        />
       </nav>
 
       <div className="bg-background/60 mx-3 mb-3 flex shrink-0 items-center gap-2.5 rounded-md px-2.5 py-2">
@@ -81,11 +110,13 @@ function SidebarGroup({
   label,
   icon: Icon,
   collapsed,
+  active,
   children,
 }: {
   label: string;
   icon: LucideIcon;
   collapsed: boolean;
+  active?: boolean;
   children: React.ReactNode;
 }) {
   const [open, setOpen] = useState(false);
@@ -94,7 +125,12 @@ function SidebarGroup({
     <div>
       <button
         onClick={() => setOpen((o) => !o)}
-        className="text-muted-foreground hover:bg-accent/50 hover:text-foreground flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 text-sm font-semibold transition-colors"
+        className={cn(
+          "flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 text-sm font-semibold transition-colors",
+          active
+            ? "bg-muted text-foreground"
+            : "text-muted-foreground hover:bg-accent/50 hover:text-foreground",
+        )}
       >
         <Icon className="size-4 shrink-0" />
         {!collapsed && (
