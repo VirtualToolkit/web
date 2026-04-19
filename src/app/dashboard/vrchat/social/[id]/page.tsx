@@ -11,7 +11,7 @@ export default function VRChatSocialProfilePage() {
   const { id } = useParams();
 
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState<any>({}); // TODO: add type
+  const [data, setData] = useState<any>({});
 
   function fetchByID() {
     setLoading(true);
