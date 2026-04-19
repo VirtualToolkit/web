@@ -1,14 +1,13 @@
 'use client'
 
 import { FormEvent, useState } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useUser } from '@/providers/UserProvider'
 
 export default function LoginPage() {
   const { login } = useUser()
   const router = useRouter()
-  const searchParams = useSearchParams()
   const [error, setError] = useState<string | null>(null)
   const [pending, setPending] = useState(false)
 
@@ -23,7 +22,8 @@ export default function LoginPage() {
 
     try {
       await login(username, password)
-      router.push(searchParams.get('next') ?? '/dashboard')
+      const next = new URLSearchParams(window.location.search).get('next')
+      router.push(next ?? '/dashboard')
     } catch {
       setError('Invalid username or password')
     } finally {
@@ -35,6 +35,7 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center">
       <form
         onSubmit={handleSubmit}
+        method="post"
         className="bg-card border-border/60 flex w-full max-w-sm flex-col gap-4 rounded-xl border p-8 shadow-lg"
       >
         <h1 className="text-xl font-semibold">

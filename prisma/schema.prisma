@@ -10,10 +10,20 @@ datasource db {
 model User {
   id String @id @default(cuid())
 
-  username    String      @unique
-  password    String
-  
-  vrchatUser  VRChatUser?
+  username      String        @unique
+  password      String
+
+  vrchatUser    VRChatUser?
+  desktopToken  DesktopToken?
+}
+
+model DesktopToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  createdAt DateTime @default(now())
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
 }
 
 model VRChatUser {
