@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { X, Settings, Gamepad2 } from "lucide-react";
+import { X, Settings, Gamepad } from "lucide-react";
 import { useSettings } from "@/providers/SettingsProvider";
 import { useVRChatAuth } from "@/providers/VRChatAuthProvider";
 
@@ -9,7 +9,7 @@ type Page = "general" | "vrchat";
 
 const pages: { id: Page; label: string; icon: React.ReactNode }[] = [
   { id: "general", label: "General", icon: <Settings className="h-3.5 w-3.5" /> },
-  { id: "vrchat", label: "VRChat", icon: <Gamepad2 className="h-3.5 w-3.5" /> },
+  { id: "vrchat", label: "VRChat", icon: <Gamepad className="h-3.5 w-3.5" /> },
 ];
 
 function Toggle({
