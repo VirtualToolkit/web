@@ -18,7 +18,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
     >
       <nav className="flex-1 overflow-y-auto px-3 space-y-0.5">
         <SidebarButton label="Feed" icon={Home} link="/dashboard" active />
-        <SidebarButton label="Magic Chatbox" icon={MessageCircleDashed} link="/dashboard" />
+        <SidebarButton label="Magic Chatbox" icon={MessageCircleDashed} link="/dashboard/magic-chatbox" />
         <SidebarGroup label="VRChat" icon={Gamepad} collapsed={collapsed}>
           <SidebarButton label="Instance" icon={HardDrive} link="/dashboard/vrchat/instance" />
           <SidebarButton label="Social" icon={BookUser} link="/dashboard/vrchat/social" />
