@@ -8,6 +8,7 @@ export interface SessionUser {
 export interface SessionData {
   user?: SessionUser
   isLoggedIn: boolean
+  pendingVrchatSession?: [string, unknown][]
 }
 
 export const sessionOptions: SessionOptions = {
