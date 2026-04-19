@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "tsx server.ts",
     "lint": "eslint",
-    "prepare": "husky"
+    "prepare": "husky",
+    "db:sqlite": "DATABASE_URL=file:./prisma-sqlite/dev.db prisma generate && DATABASE_URL=file:./prisma-sqlite/dev.db prisma db push",
+    "db:postgres": "prisma generate && prisma db push"
   },
   "dependencies": {
     "@guarde/perms.ts": "^1.0.9",
