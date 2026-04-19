@@ -1,13 +1,13 @@
-import { VRChat } from 'vrchat'
-import { prisma } from '@/lib/db'
+import { VRChat } from "vrchat";
+import { prisma } from "@/lib/db";
 
 const APP_CONFIG = {
   application: {
-    name: 'VirtualToolkit',
-    version: '1.0.0',
-    contact: 'support@virtualtoolkit.app',
+    name: "VirtualToolkit",
+    version: "1.0.0",
+    contact: "support@virtualtoolkit.app",
   },
-} as const
+} as const;
 
 export async function getVRChatClient(
   userId: string,
@@ -15,17 +15,17 @@ export async function getVRChatClient(
   const vrchatUser = await prisma.vRChatUser.findUnique({
     where: { userId },
     select: { cookieData: true },
-  })
+  });
 
-  if (!vrchatUser) return null
+  if (!vrchatUser) return null;
 
-  const cookieStore = new Map<string, unknown>(JSON.parse(vrchatUser.cookieData))
+  const cookieStore = new Map<string, unknown>(JSON.parse(vrchatUser.cookieData));
   const client = new VRChat({
     ...APP_CONFIG,
     keyv: cookieStore,
-  })
+  });
 
-  return { client, cookieStore }
+  return { client, cookieStore };
 }
 
 export async function saveVRChatClient(
@@ -35,5 +35,5 @@ export async function saveVRChatClient(
   await prisma.vRChatUser.update({
     where: { userId },
     data: { cookieData: JSON.stringify([...cookieStore.entries()]) },
-  })
+  });
 }

@@ -1,29 +1,29 @@
-import { getIronSession } from 'iron-session'
-import { cookies } from 'next/headers'
-import { NextResponse } from 'next/server'
-import { sessionOptions, type SessionData } from '@/lib/session'
-import { getVRChatClient } from '@/lib/vrchat'
+import { getIronSession } from "iron-session";
+import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
+import { sessionOptions, type SessionData } from "@/lib/session";
+import { getVRChatClient } from "@/lib/vrchat";
 
 export async function GET(request: Request) {
-  const session = await getIronSession<SessionData>(await cookies(), sessionOptions)
+  const session = await getIronSession<SessionData>(await cookies(), sessionOptions);
   if (!session.isLoggedIn || !session.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const result = await getVRChatClient(session.user.id)
+  const result = await getVRChatClient(session.user.id);
   if (!result) {
-    return NextResponse.json({ error: 'VRChat account not connected' }, { status: 403 })
+    return NextResponse.json({ error: "VRChat account not connected" }, { status: 403 });
   }
 
-  const { searchParams } = new URL(request.url)
-  const offline = searchParams.get('offline') === 'true'
+  const { searchParams } = new URL(request.url);
+  const offline = searchParams.get("offline") === "true";
 
-  const { client } = result
-  const res = await client.getFriends({ query: { n: 100, offline } })
+  const { client } = result;
+  const res = await client.getFriends({ query: { n: 100, offline } });
 
   if (res.error) {
-    return NextResponse.json({ error: 'Failed to fetch friends' }, { status: 502 })
+    return NextResponse.json({ error: "Failed to fetch friends" }, { status: 502 });
   }
 
-  return NextResponse.json(res.data ?? [])
+  return NextResponse.json(res.data ?? []);
 }
