@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Work_Sans, Geist_Mono } from "next/font/google";
 import "../globals.css";
 import Topbar from "@/components/Topbar";
+import { UserProvider } from "@/providers/UserProvider";
 
 const workSans = Work_Sans({
   variable: "--font-sans",
@@ -29,8 +30,11 @@ export default function RootLayout({
       className={`${workSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col dark">
-        <Topbar/>
-        <main className="pt-14">{children}</main></body>
+        <UserProvider>
+          <Topbar/>
+          <main className="pt-14">{children}</main>
+        </UserProvider>
+      </body>
     </html>
   );
 }
