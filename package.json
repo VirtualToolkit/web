@@ -6,7 +6,8 @@
     "dev": "NODE_ENV=development tsx server.ts",
     "build": "next build",
     "start": "tsx server.ts",
-    "lint": "eslint"
+    "lint": "eslint",
+    "prepare": "husky"
   },
   "dependencies": {
     "@guarde/perms.ts": "^1.0.9",
@@ -37,6 +38,10 @@
     "@types/ws": "^8.18.1",
     "eslint": "^9",
     "eslint-config-next": "16.2.4",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
+    "prettier": "^3.8.3",
+    "prettier-plugin-tailwindcss": "^0.7.2",
     "prisma": "^7.7.0",
     "tailwindcss": "^4",
     "tsx": "^4.21.0",
@@ -49,5 +54,8 @@
   "trustedDependencies": [
     "sharp",
     "unrs-resolver"
-  ]
+  ],
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx,json,css,md}": "prettier --write"
+  }
 }
