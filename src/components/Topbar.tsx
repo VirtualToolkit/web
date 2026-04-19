@@ -1,13 +1,32 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { LogOut, ChevronDown } from 'lucide-react';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { useUser } from '@/providers/UserProvider';
+import { useVRChatAuth } from '@/providers/VRChatAuthProvider';
+
+function AvatarThumb({ src, seed }: { src: string | null; seed: string }) {
+   const [err, setErr] = useState(false)
+   const fallback = `https://api.dicebear.com/9.x/thumbs/svg?seed=${seed}`
+   return (
+      <span className="block h-7 w-7 shrink-0 overflow-hidden rounded-full">
+         {/* eslint-disable-next-line @next/next/no-img-element */}
+         <img
+            src={(!err && src) ? src : fallback}
+            alt="Profile"
+            onError={() => setErr(true)}
+            className="h-full w-full object-cover"
+         />
+      </span>
+   )
+}
 
 export default function Topbar() {
    const { user, logout } = useUser()
+   const { avatarUrl } = useVRChatAuth()
    const router = useRouter()
 
    if (!user) return null
@@ -31,11 +50,7 @@ export default function Topbar() {
          <DropdownMenu.Root>
             <DropdownMenu.Trigger asChild>
                <button className="text-muted-foreground hover:text-foreground flex cursor-pointer items-center gap-1.5 text-sm outline-none">
-                  <img
-                     src={`https://api.dicebear.com/9.x/thumbs/svg?seed=${user?.username ?? 'guest'}`}
-                     alt="Profile"
-                     className="h-7 w-7 rounded-full object-cover"
-                  />
+                  <AvatarThumb src={avatarUrl} seed={user.username} />
                   <ChevronDown className="h-3.5 w-3.5" />
                </button>
             </DropdownMenu.Trigger>

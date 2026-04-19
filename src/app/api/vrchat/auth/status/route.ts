@@ -12,12 +12,33 @@ export async function GET() {
 
   const vrchatUser = await prisma.vRChatUser.findUnique({
     where: { userId: session.user.id },
-    select: { vrcDisplayName: true },
+    select: { vrcDisplayName: true, cookieData: true },
   })
 
   if (!vrchatUser) {
     return NextResponse.json({ connected: false })
   }
 
-  return NextResponse.json({ connected: true, displayName: vrchatUser.vrcDisplayName })
+  let currentAvatarImageUrl: string | null = null
+  try {
+    const { VRChat } = await import('vrchat')
+    const cookieStore = new Map(JSON.parse(vrchatUser.cookieData))
+    const client = new VRChat({
+      application: { name: 'VirtualToolkit', version: '1.0.0', contact: 'support@virtualtoolkit.app' },
+      keyv: cookieStore,
+    })
+    const result = await client.getCurrentUser()
+    const data = result.data as Record<string, unknown> | null
+    if (data && !('requiresTwoFactorAuth' in data)) {
+      currentAvatarImageUrl = (data.currentAvatarImageUrl as string) ?? null
+    }
+  } catch {
+    // non-fatal — avatar URL is best-effort
+  }
+
+  return NextResponse.json({
+    connected: true,
+    displayName: vrchatUser.vrcDisplayName,
+    currentAvatarImageUrl,
+  })
 }

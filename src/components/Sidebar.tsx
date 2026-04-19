@@ -21,7 +21,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
         <SidebarButton label="Magic Chatbox" icon={MessageCircleDashed} link="/dashboard" />
         <SidebarGroup label="VRChat" icon={Gamepad} collapsed={collapsed}>
           <SidebarButton label="Instance" icon={HardDrive} link="/dashboard/vrchat/instance" />
-          <SidebarButton label="Social" icon={BookUser} link="/dashboard" />
+          <SidebarButton label="Social" icon={BookUser} link="/dashboard/vrchat/social" />
           <SidebarButton label="Avatar Search" icon={UserSearch} link="/dashboard" />
         </SidebarGroup>
         <SidebarButton label="Wrist Overlay" icon={Watch} link="/dashboard" />
