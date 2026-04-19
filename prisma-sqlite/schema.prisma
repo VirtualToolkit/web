@@ -1,0 +1,54 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id String @id @default(cuid())
+
+  username String @unique
+  password String
+
+  settings     Settings?
+  vrchatUser   VRChatUser?
+  desktopToken DesktopToken?
+}
+
+model Settings {
+  id String @id @default(cuid())
+
+  reduced_motion Boolean @default(false)
+  low_bandwidth  Boolean @default(false)
+
+  accent_colour String @default("#a29bfe")
+
+  notifications_enabled Boolean @default(true)
+  notify_on_friend_join Boolean @default(false)
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+model DesktopToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  createdAt DateTime @default(now())
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+model VRChatUser {
+  id String @id @default(cuid())
+
+  cookieData String
+
+  vrcDisplayName String?
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
+}
