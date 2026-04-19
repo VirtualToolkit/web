@@ -3,10 +3,12 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { LogOut, ChevronDown } from "lucide-react";
+import { LogOut, ChevronDown, Settings, Sun, Moon } from "lucide-react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { useUser } from "@/providers/UserProvider";
 import { useVRChatAuth } from "@/providers/VRChatAuthProvider";
+import { useSettings } from "@/providers/SettingsProvider";
+import { useTheme } from "@/providers/ThemeProvider";
 
 function AvatarThumb({ src, seed }: { src: string | null; seed: string }) {
   const [err, setErr] = useState(false);
@@ -26,6 +28,8 @@ function AvatarThumb({ src, seed }: { src: string | null; seed: string }) {
 export default function Topbar() {
   const { user, logout } = useUser();
   const { avatarUrl } = useVRChatAuth();
+  const { openSettings } = useSettings();
+  const { theme, toggleTheme } = useTheme();
   const router = useRouter();
 
   if (!user) return null;
@@ -64,6 +68,28 @@ export default function Topbar() {
             sideOffset={8}
             className="bg-card border-border/60 z-50 min-w-36 rounded-md border p-1 shadow-md"
           >
+            <DropdownMenu.Item
+              onSelect={openSettings}
+              className="text-muted-foreground hover:text-foreground hover:bg-muted flex cursor-pointer items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none"
+            >
+              <Settings className="h-3.5 w-3.5" />
+              Settings
+            </DropdownMenu.Item>
+
+            <DropdownMenu.Item
+              onSelect={toggleTheme}
+              className="text-muted-foreground hover:text-foreground hover:bg-muted flex cursor-pointer items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none"
+            >
+              {theme === "dark" ? (
+                <Sun className="h-3.5 w-3.5" />
+              ) : (
+                <Moon className="h-3.5 w-3.5" />
+              )}
+              {theme === "dark" ? "Light mode" : "Dark mode"}
+            </DropdownMenu.Item>
+
+            <DropdownMenu.Separator className="bg-border/60 my-1 h-px" />
+
             <DropdownMenu.Item
               onSelect={handleLogout}
               className="text-muted-foreground hover:text-foreground hover:bg-muted flex cursor-pointer items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none"
