@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { ChevronRight, Home, LucideIcon, Gamepad, BookUser, HardDrive, MessageCircleDashed, UserSearch, Watch } from 'lucide-react';
 import Link from 'next/link';
+import { useDesktopConnection } from '@/providers/DesktopConnectionProvider';
 
 interface SidebarProps {
   collapsed: boolean;
@@ -11,6 +12,8 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
+  const { isConnected } = useDesktopConnection();
+
   return (
     <aside
       className="bg-card fixed top-14 bottom-0 left-0 z-40 flex flex-col overflow-hidden transition-[width] duration-300 ease-in-out"
@@ -28,8 +31,12 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
       </nav>
 
       <div className="shrink-0 mx-3 mb-3 flex items-center gap-2.5 rounded-md py-2 px-2.5 bg-background/60">
-        <div className="shrink-0 bg-red-400 rounded-full w-2 h-2" />
-        {!collapsed && <span className="text-sm text-muted-foreground whitespace-nowrap">Not connected</span>}
+        <div className={cn('shrink-0 rounded-full w-2 h-2', isConnected ? 'bg-green-400' : 'bg-red-400')} />
+        {!collapsed && (
+          <span className="text-sm text-muted-foreground whitespace-nowrap">
+            {isConnected ? 'Connected' : 'Not connected'}
+          </span>
+        )}
       </div>
     </aside>
   );
