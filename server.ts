@@ -6,10 +6,14 @@ import { WebSocketServer } from 'ws'
 import { handleDesktopConnection } from './src/lib/desktop-ws'
 
 const dev = process.env.NODE_ENV !== 'production'
-const app = next({ dev })
+const hostname = 'localhost'
+const port = parseInt(process.env.PORT ?? '3000', 10)
+const app = next({ dev, hostname, port })
 const handle = app.getRequestHandler()
 
 app.prepare().then(() => {
+  const upgradeHandler = app.getUpgradeHandler()
+
   const httpServer = createServer((req, res) => {
     handle(req, res, parse(req.url!, true))
   })
@@ -21,14 +25,13 @@ app.prepare().then(() => {
     if (pathname === '/ws/desktop') {
       wss.handleUpgrade(req, socket, head, ws => wss.emit('connection', ws, req))
     } else {
-      socket.destroy()
+      upgradeHandler(req, socket, head)
     }
   })
 
   wss.on('connection', handleDesktopConnection)
 
-  const port = parseInt(process.env.PORT ?? '3000', 10)
-  httpServer.listen(port, () => {
+  httpServer.listen(port, hostname, () => {
     console.log(`> Ready on http://localhost:${port}`)
   })
 })
