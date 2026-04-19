@@ -3,6 +3,7 @@ import { Work_Sans, Geist_Mono } from "next/font/google";
 import "../globals.css";
 import Topbar from "@/components/Topbar";
 import { UserProvider } from "@/providers/UserProvider";
+import { VRChatAuthProvider } from "@/providers/VRChatAuthProvider";
 
 const workSans = Work_Sans({
   variable: "--font-sans",
@@ -31,8 +32,10 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col dark">
         <UserProvider>
-          <Topbar/>
-          <main className="pt-14">{children}</main>
+          <VRChatAuthProvider>
+            <Topbar/>
+            <main className="pt-14">{children}</main>
+          </VRChatAuthProvider>
         </UserProvider>
       </body>
     </html>

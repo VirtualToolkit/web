@@ -8,8 +8,21 @@ datasource db {
 }
 
 model User {
-  id String @unique @default(cuid())
+  id String @id @default(cuid())
+
+  username    String      @unique
+  password    String
   
-  username String @unique
-  password String
+  vrchatUser  VRChatUser?
+}
+
+model VRChatUser {
+  id             String @id @default(cuid())
+
+  cookieData     String
+  
+  vrcDisplayName String?
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
 }
