@@ -5,6 +5,7 @@ import { RefreshCw, UserRound, ExternalLink, MoreHorizontal } from 'lucide-react
 import { useVRChatAuth } from '@/providers/VRChatAuthProvider'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import Link from 'next/link'
 
 type UserStatus = 'active' | 'ask me' | 'busy' | 'join me' | 'offline'
 
@@ -181,13 +182,12 @@ export default function VRChatSocialPage() {
                   <td className="py-3 pr-4 text-right">
                     <div className="flex items-center justify-end gap-1">
                       <Button variant="ghost" size="icon-sm" asChild title="Open VRChat profile">
-                        <a
-                          href={`https://vrchat.com/home/user/${friend.id}`}
-                          target="_blank"
+                        <Link
+                          href={`/dashboard/vrchat/social/${friend.id}`}
                           rel="noreferrer"
                         >
                           <ExternalLink className="size-3.5" />
-                        </a>
+                        </Link>
                       </Button>
                       <Button variant="ghost" size="icon-sm" title="More actions">
                         <MoreHorizontal className="size-3.5" />
