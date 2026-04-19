@@ -1,0 +1,25 @@
+#!/bin/sh
+
+commit_msg=$(cat "$1")
+
+pattern="^(feat|fix|rm|docs|chore|refactor|test|style|perf)(\(.+\))?: .+"
+
+if ! echo "$commit_msg" | grep -qE "$pattern"; then
+  echo ""
+  echo "  Bad commit message: \"$commit_msg\""
+  echo ""
+  echo "  Must start with one of:"
+  echo "    feat:      a new feature"
+  echo "    fix:       a bug fix"
+  echo "    rm:        removing something"
+  echo "    docs:      documentation only"
+  echo "    chore:     tooling / config"
+  echo "    refactor:  code restructure"
+  echo "    test:      tests"
+  echo "    style:     formatting"
+  echo "    perf:      performance"
+  echo ""
+  echo "  Example: feat: add login page"
+  echo ""
+  exit 1
+fi
