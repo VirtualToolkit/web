@@ -1,39 +1,39 @@
-'use client'
+"use client";
 
-import { FormEvent, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import { useUser } from '@/providers/UserProvider'
+import { FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { useUser } from "@/providers/UserProvider";
 
 export default function RegisterPage() {
-  const { register } = useUser()
-  const router = useRouter()
-  const [error, setError] = useState<string | null>(null)
-  const [pending, setPending] = useState(false)
+  const { register } = useUser();
+  const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
+  const [pending, setPending] = useState(false);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    setError(null)
-    setPending(true)
+    e.preventDefault();
+    setError(null);
+    setPending(true);
 
-    const form = new FormData(e.currentTarget)
-    const username = form.get('username') as string
-    const password = form.get('password') as string
-    const confirm = form.get('confirm') as string
+    const form = new FormData(e.currentTarget);
+    const username = form.get("username") as string;
+    const password = form.get("password") as string;
+    const confirm = form.get("confirm") as string;
 
     if (password !== confirm) {
-      setError('Passwords do not match')
-      setPending(false)
-      return
+      setError("Passwords do not match");
+      setPending(false);
+      return;
     }
 
     try {
-      await register(username, password)
-      router.push('/dashboard')
+      await register(username, password);
+      router.push("/dashboard");
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Registration failed')
+      setError(err instanceof Error ? err.message : "Registration failed");
     } finally {
-      setPending(false)
+      setPending(false);
     }
   }
 
@@ -62,7 +62,7 @@ export default function RegisterPage() {
             required
             minLength={3}
             autoComplete="username"
-            className="border-border/60 bg-background focus:border-shy-moment rounded-md border px-3 py-2 text-sm outline-none transition-colors"
+            className="border-border/60 bg-background focus:border-shy-moment rounded-md border px-3 py-2 text-sm transition-colors outline-none"
           />
         </div>
 
@@ -77,7 +77,7 @@ export default function RegisterPage() {
             required
             minLength={8}
             autoComplete="new-password"
-            className="border-border/60 bg-background focus:border-shy-moment rounded-md border px-3 py-2 text-sm outline-none transition-colors"
+            className="border-border/60 bg-background focus:border-shy-moment rounded-md border px-3 py-2 text-sm transition-colors outline-none"
           />
         </div>
 
@@ -92,7 +92,7 @@ export default function RegisterPage() {
             required
             minLength={8}
             autoComplete="new-password"
-            className="border-border/60 bg-background focus:border-shy-moment rounded-md border px-3 py-2 text-sm outline-none transition-colors"
+            className="border-border/60 bg-background focus:border-shy-moment rounded-md border px-3 py-2 text-sm transition-colors outline-none"
           />
         </div>
 
@@ -101,16 +101,16 @@ export default function RegisterPage() {
           disabled={pending}
           className="bg-shy-moment/90 hover:bg-shy-moment mt-1 rounded-md py-2 text-sm font-medium text-white transition-colors disabled:opacity-50"
         >
-          {pending ? 'Creating account…' : 'Create account'}
+          {pending ? "Creating account…" : "Create account"}
         </button>
 
         <p className="text-muted-foreground text-center text-sm">
-          Already have an account?{' '}
+          Already have an account?{" "}
           <Link href="/login" className="text-shy-moment hover:underline">
             Sign in
           </Link>
         </p>
       </form>
     </div>
-  )
+  );
 }

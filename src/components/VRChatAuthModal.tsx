@@ -1,91 +1,93 @@
-'use client'
+"use client";
 
-import { FormEvent, useState } from 'react'
-import { Gamepad2, Lock, ShieldCheck } from 'lucide-react'
+import { FormEvent, useState } from "react";
+import { Gamepad2, Lock, ShieldCheck } from "lucide-react";
 
-type Stage = 'credentials' | 'twofa'
+type Stage = "credentials" | "twofa";
 
 interface VRChatAuthModalProps {
-  onConnected: (displayName: string | null) => void
-  onClose: () => void
+  onConnected: (displayName: string | null) => void;
+  onClose: () => void;
 }
 
 export function VRChatAuthModal({ onConnected, onClose }: VRChatAuthModalProps) {
-  const [stage, setStage] = useState<Stage>('credentials')
-  const [error, setError] = useState<string | null>(null)
-  const [pending, setPending] = useState(false)
+  const [stage, setStage] = useState<Stage>("credentials");
+  const [error, setError] = useState<string | null>(null);
+  const [pending, setPending] = useState(false);
 
   async function handleConnect(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    setError(null)
-    setPending(true)
+    e.preventDefault();
+    setError(null);
+    setPending(true);
 
-    const form = new FormData(e.currentTarget)
-    const username = form.get('username') as string
-    const password = form.get('password') as string
+    const form = new FormData(e.currentTarget);
+    const username = form.get("username") as string;
+    const password = form.get("password") as string;
 
     try {
-      const res = await fetch('/api/vrchat/auth/connect', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/vrchat/auth/connect", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
-      })
-      const data = await res.json()
+      });
+      const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error ?? 'Authentication failed')
-        return
+        setError(data.error ?? "Authentication failed");
+        return;
       }
 
-      if (data.status === 'requires2fa') {
-        setStage('twofa')
-        return
+      if (data.status === "requires2fa") {
+        setStage("twofa");
+        return;
       }
 
-      onConnected(data.displayName ?? null)
+      onConnected(data.displayName ?? null);
     } catch {
-      setError('Something went wrong. Please try again.')
+      setError("Something went wrong. Please try again.");
     } finally {
-      setPending(false)
+      setPending(false);
     }
   }
 
   async function handleVerify2FA(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    setError(null)
-    setPending(true)
+    e.preventDefault();
+    setError(null);
+    setPending(true);
 
-    const form = new FormData(e.currentTarget)
-    const code = form.get('code') as string
+    const form = new FormData(e.currentTarget);
+    const code = form.get("code") as string;
 
     try {
-      const res = await fetch('/api/vrchat/auth/verify-2fa', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code, method: 'emailOtp' }),
-      })
-      const data = await res.json()
+      const res = await fetch("/api/vrchat/auth/verify-2fa", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code, method: "emailOtp" }),
+      });
+      const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error ?? 'Verification failed')
-        return
+        setError(data.error ?? "Verification failed");
+        return;
       }
 
-      onConnected(data.displayName ?? null)
+      onConnected(data.displayName ?? null);
     } catch {
-      setError('Something went wrong. Please try again.')
+      setError("Something went wrong. Please try again.");
     } finally {
-      setPending(false)
+      setPending(false);
     }
   }
 
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
-      onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
     >
       <div className="border-border/60 bg-card w-full max-w-sm rounded-xl border shadow-xl">
-        {stage === 'twofa' ? (
+        {stage === "twofa" ? (
           <form onSubmit={handleVerify2FA} className="flex flex-col gap-5 p-8">
             <div className="flex flex-col gap-1">
               <div className="mb-1 flex items-center gap-2">
@@ -94,9 +96,7 @@ export function VRChatAuthModal({ onConnected, onClose }: VRChatAuthModalProps) 
                 </div>
                 <h1 className="font-semibold">Two-factor authentication</h1>
               </div>
-              <p className="text-muted-foreground text-sm">
-                Your VRChat account has 2FA enabled.
-              </p>
+              <p className="text-muted-foreground text-sm">Your VRChat account has 2FA enabled.</p>
             </div>
 
             <div className="flex flex-col gap-1.5">
@@ -115,7 +115,7 @@ export function VRChatAuthModal({ onConnected, onClose }: VRChatAuthModalProps) 
                 required
                 autoFocus
                 placeholder="000000"
-                className="border-border/60 bg-background focus:border-shy-moment mt-1 rounded-md border px-3 py-2 text-center font-mono text-sm tracking-widest outline-none transition-colors"
+                className="border-border/60 bg-background focus:border-shy-moment mt-1 rounded-md border px-3 py-2 text-center font-mono text-sm tracking-widest transition-colors outline-none"
               />
             </div>
 
@@ -128,12 +128,15 @@ export function VRChatAuthModal({ onConnected, onClose }: VRChatAuthModalProps) 
               disabled={pending}
               className="bg-shy-moment/90 hover:bg-shy-moment rounded-md py-2 text-sm font-medium text-white transition-colors disabled:opacity-50"
             >
-              {pending ? 'Verifying…' : 'Verify code'}
+              {pending ? "Verifying…" : "Verify code"}
             </button>
 
             <button
               type="button"
-              onClick={() => { setStage('credentials'); setError(null) }}
+              onClick={() => {
+                setStage("credentials");
+                setError(null);
+              }}
               className="text-muted-foreground hover:text-foreground -mt-1 text-center text-sm transition-colors"
             >
               ← Back
@@ -163,7 +166,7 @@ export function VRChatAuthModal({ onConnected, onClose }: VRChatAuthModalProps) 
                 type="text"
                 required
                 autoComplete="username"
-                className="border-border/60 bg-background focus:border-shy-moment rounded-md border px-3 py-2 text-sm outline-none transition-colors"
+                className="border-border/60 bg-background focus:border-shy-moment rounded-md border px-3 py-2 text-sm transition-colors outline-none"
               />
             </div>
 
@@ -177,7 +180,7 @@ export function VRChatAuthModal({ onConnected, onClose }: VRChatAuthModalProps) 
                 type="password"
                 required
                 autoComplete="current-password"
-                className="border-border/60 bg-background focus:border-shy-moment rounded-md border px-3 py-2 text-sm outline-none transition-colors"
+                className="border-border/60 bg-background focus:border-shy-moment rounded-md border px-3 py-2 text-sm transition-colors outline-none"
               />
             </div>
 
@@ -190,7 +193,7 @@ export function VRChatAuthModal({ onConnected, onClose }: VRChatAuthModalProps) 
               disabled={pending}
               className="bg-shy-moment/90 hover:bg-shy-moment mt-1 rounded-md py-2 text-sm font-medium text-white transition-colors disabled:opacity-50"
             >
-              {pending ? 'Connecting…' : 'Connect account'}
+              {pending ? "Connecting…" : "Connect account"}
             </button>
 
             <div className="text-muted-foreground flex items-start gap-2 text-xs">
@@ -204,5 +207,5 @@ export function VRChatAuthModal({ onConnected, onClose }: VRChatAuthModalProps) 
         )}
       </div>
     </div>
-  )
+  );
 }

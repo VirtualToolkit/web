@@ -1,90 +1,83 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from 'react'
-import { RefreshCw, UserRound, ExternalLink, MoreHorizontal } from 'lucide-react'
-import { useVRChatAuth } from '@/providers/VRChatAuthProvider'
-import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
-import Link from 'next/link'
+import { useEffect, useState } from "react";
+import { RefreshCw, UserRound, ExternalLink, MoreHorizontal } from "lucide-react";
+import { useVRChatAuth } from "@/providers/VRChatAuthProvider";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
 
-type UserStatus = 'active' | 'ask me' | 'busy' | 'join me' | 'offline'
+type UserStatus = "active" | "ask me" | "busy" | "join me" | "offline";
 
 interface Friend {
-  id: string
-  displayName: string
-  status: UserStatus
-  statusDescription: string
-  currentAvatarThumbnailImageUrl?: string
-  location: string
+  id: string;
+  displayName: string;
+  status: UserStatus;
+  statusDescription: string;
+  currentAvatarThumbnailImageUrl?: string;
+  location: string;
 }
 
 const statusConfig: Record<UserStatus, { label: string; dot: string }> = {
-  'join me': { label: 'Join Me',  dot: 'bg-sky-400' },
-  'active':    { label: 'Active',   dot: 'bg-emerald-400' },
-  'ask me':  { label: 'Ask Me',   dot: 'bg-amber-400' },
-  'busy':      { label: 'Busy',     dot: 'bg-red-400' },
-  'offline':   { label: 'Offline',  dot: 'bg-zinc-500' },
-}
+  "join me": { label: "Join Me", dot: "bg-sky-400" },
+  active: { label: "Active", dot: "bg-emerald-400" },
+  "ask me": { label: "Ask Me", dot: "bg-amber-400" },
+  busy: { label: "Busy", dot: "bg-red-400" },
+  offline: { label: "Offline", dot: "bg-zinc-500" },
+};
 
 function StatusBadge({ status }: { status: UserStatus }) {
-  const cfg = statusConfig[status] ?? statusConfig.offline
+  const cfg = statusConfig[status] ?? statusConfig.offline;
   return (
     <span className="flex items-center gap-1.5">
-      <span className={cn('size-2 rounded-full', cfg.dot)} />
+      <span className={cn("size-2 rounded-full", cfg.dot)} />
       <span className="text-muted-foreground text-sm">{cfg.label}</span>
     </span>
-  )
+  );
 }
 
 function AvatarThumb({ src, name }: { src?: string; name: string }) {
-  const [err, setErr] = useState(false)
+  const [err, setErr] = useState(false);
   if (!src || err) {
     return (
       <span className="bg-muted flex size-8 items-center justify-center rounded-full">
         <UserRound className="text-muted-foreground size-4" />
       </span>
-    )
+    );
   }
   return (
     <span className="block size-8 shrink-0 overflow-hidden rounded-full">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={src}
-        alt={name}
-        onError={() => setErr(true)}
-        className="size-full object-cover"
-      />
+      <img src={src} alt={name} onError={() => setErr(true)} className="size-full object-cover" />
     </span>
-  )
+  );
 }
 
 export default function VRChatSocialPage() {
-  const { isConnected, isLoading: authLoading, openModal } = useVRChatAuth()
-  const [friends, setFriends] = useState<Friend[]>([])
-  const [loading, setLoading] = useState(false)
-  const [showOffline, setShowOffline] = useState(false)
+  const { isConnected, isLoading: authLoading, openModal } = useVRChatAuth();
+  const [friends, setFriends] = useState<Friend[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [showOffline, setShowOffline] = useState(false);
 
   function fetchFriends(offline: boolean) {
-    setLoading(true)
+    setLoading(true);
     fetch(`/api/vrchat/social/friends?offline=${offline}`)
       .then((r) => r.json())
       .then((data) => (Array.isArray(data) ? setFriends(data) : setFriends([])))
       .catch(() => setFriends([]))
-      .finally(() => setLoading(false))
+      .finally(() => setLoading(false));
   }
 
   useEffect(() => {
-    if (!isConnected) return
-    fetchFriends(showOffline)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isConnected, showOffline])
+    if (!isConnected) return;
+    fetchFriends(showOffline);
+  }, [isConnected, showOffline]);
 
   if (authLoading) {
     return (
       <div className="flex h-64 items-center justify-center">
         <RefreshCw className="text-muted-foreground size-5 animate-spin" />
       </div>
-    )
+    );
   }
 
   if (!isConnected) {
@@ -105,7 +98,7 @@ export default function VRChatSocialPage() {
           </Button>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -115,12 +108,8 @@ export default function VRChatSocialPage() {
           <h1 className="text-lg font-semibold">Social</h1>
         </div>
         <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setShowOffline((v) => !v)}
-          >
-            {showOffline ? 'Online only' : 'Show offline'}
+          <Button variant="outline" size="sm" onClick={() => setShowOffline((v) => !v)}>
+            {showOffline ? "Online only" : "Show offline"}
           </Button>
           <Button
             variant="outline"
@@ -128,7 +117,7 @@ export default function VRChatSocialPage() {
             onClick={() => fetchFriends(showOffline)}
             disabled={loading}
           >
-            <RefreshCw className={cn('size-4', loading && 'animate-spin')} />
+            <RefreshCw className={cn("size-4", loading && "animate-spin")} />
           </Button>
         </div>
       </div>
@@ -147,7 +136,7 @@ export default function VRChatSocialPage() {
             <thead>
               <tr className="border-border/60 border-b">
                 <th className="text-muted-foreground w-10 py-3 pl-4 text-left font-medium" />
-                <th className="text-muted-foreground py-3 pl-3 pr-4 text-left font-medium">
+                <th className="text-muted-foreground py-3 pr-4 pl-3 text-left font-medium">
                   Display Name
                 </th>
                 <th className="text-muted-foreground py-3 pr-4 text-left font-medium">Status</th>
@@ -162,8 +151,8 @@ export default function VRChatSocialPage() {
                 <tr
                   key={friend.id}
                   className={cn(
-                    'hover:bg-muted/40 transition-colors',
-                    i !== friends.length - 1 && 'border-border/40 border-b',
+                    "hover:bg-muted/40 transition-colors",
+                    i !== friends.length - 1 && "border-border/40 border-b",
                   )}
                 >
                   <td className="py-3 pl-4">
@@ -172,20 +161,17 @@ export default function VRChatSocialPage() {
                       name={friend.displayName}
                     />
                   </td>
-                  <td className="py-3 pl-3 pr-4 font-medium">{friend.displayName}</td>
+                  <td className="py-3 pr-4 pl-3 font-medium">{friend.displayName}</td>
                   <td className="py-3 pr-4">
                     <StatusBadge status={friend.status} />
                   </td>
                   <td className="text-muted-foreground hidden py-3 pr-4 md:table-cell">
-                    {friend.statusDescription || '—'}
+                    {friend.statusDescription || "—"}
                   </td>
                   <td className="py-3 pr-4 text-right">
                     <div className="flex items-center justify-end gap-1">
                       <Button variant="ghost" size="icon-sm" asChild title="Open VRChat profile">
-                        <Link
-                          href={`/dashboard/vrchat/social/${friend.id}`}
-                          rel="noreferrer"
-                        >
+                        <Link href={`/dashboard/vrchat/social/${friend.id}`} rel="noreferrer">
                           <ExternalLink className="size-3.5" />
                         </Link>
                       </Button>
@@ -201,5 +187,5 @@ export default function VRChatSocialPage() {
         )}
       </div>
     </div>
-  )
+  );
 }

@@ -1,17 +1,17 @@
-'use client'
+"use client";
 
-import { RefreshCw, Unplug } from 'lucide-react'
-import { useVRChatAuth } from '@/providers/VRChatAuthProvider'
+import { RefreshCw, Unplug } from "lucide-react";
+import { useVRChatAuth } from "@/providers/VRChatAuthProvider";
 
 export default function VRChatInstancePage() {
-  const { isConnected, isLoading, displayName, openModal, disconnect } = useVRChatAuth()
+  const { isConnected, isLoading, displayName, openModal, disconnect } = useVRChatAuth();
 
   if (isLoading) {
     return (
       <div className="flex h-64 items-center justify-center">
         <RefreshCw className="text-muted-foreground size-5 animate-spin" />
       </div>
-    )
+    );
   }
 
   if (!isConnected) {
@@ -29,7 +29,7 @@ export default function VRChatInstancePage() {
           </button>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -44,7 +44,7 @@ export default function VRChatInstancePage() {
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
             <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
           </span>
-          <span className="text-sm font-medium">{displayName ?? 'Connected'}</span>
+          <span className="text-sm font-medium">{displayName ?? "Connected"}</span>
           <button
             onClick={disconnect}
             className="text-muted-foreground hover:text-destructive ml-1 transition-colors"
@@ -59,5 +59,5 @@ export default function VRChatInstancePage() {
         <p className="text-muted-foreground text-sm">Instance browser coming soon.</p>
       </div>
     </div>
-  )
+  );
 }

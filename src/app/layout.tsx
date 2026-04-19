@@ -26,14 +26,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${workSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col dark">
+    <html lang="en" className={`${workSans.variable} ${geistMono.variable} h-full antialiased`}>
+      <body className="dark flex min-h-full flex-col">
         <UserProvider>
           <VRChatAuthProvider>
-            <Topbar/>
+            <Topbar />
             <main className="pt-14">{children}</main>
           </VRChatAuthProvider>
         </UserProvider>
