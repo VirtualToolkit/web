@@ -1,14 +1,13 @@
 'use client'
 
 import { FormEvent, useState } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useUser } from '@/providers/UserProvider'
 
-export default function LoginPage() {
-  const { login } = useUser()
+export default function RegisterPage() {
+  const { register } = useUser()
   const router = useRouter()
-  const searchParams = useSearchParams()
   const [error, setError] = useState<string | null>(null)
   const [pending, setPending] = useState(false)
 
@@ -20,12 +19,19 @@ export default function LoginPage() {
     const form = new FormData(e.currentTarget)
     const username = form.get('username') as string
     const password = form.get('password') as string
+    const confirm = form.get('confirm') as string
+
+    if (password !== confirm) {
+      setError('Passwords do not match')
+      setPending(false)
+      return
+    }
 
     try {
-      await login(username, password)
-      router.push(searchParams.get('next') ?? '/dashboard')
-    } catch {
-      setError('Invalid username or password')
+      await register(username, password)
+      router.push('/dashboard')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Registration failed')
     } finally {
       setPending(false)
     }
@@ -54,6 +60,7 @@ export default function LoginPage() {
             name="username"
             type="text"
             required
+            minLength={3}
             autoComplete="username"
             className="border-border/60 bg-background focus:border-shy-moment rounded-md border px-3 py-2 text-sm outline-none transition-colors"
           />
@@ -68,7 +75,23 @@ export default function LoginPage() {
             name="password"
             type="password"
             required
-            autoComplete="current-password"
+            minLength={8}
+            autoComplete="new-password"
+            className="border-border/60 bg-background focus:border-shy-moment rounded-md border px-3 py-2 text-sm outline-none transition-colors"
+          />
+        </div>
+
+        <div className="flex flex-col gap-1.5">
+          <label className="text-muted-foreground text-sm" htmlFor="confirm">
+            Confirm password
+          </label>
+          <input
+            id="confirm"
+            name="confirm"
+            type="password"
+            required
+            minLength={8}
+            autoComplete="new-password"
             className="border-border/60 bg-background focus:border-shy-moment rounded-md border px-3 py-2 text-sm outline-none transition-colors"
           />
         </div>
@@ -78,13 +101,13 @@ export default function LoginPage() {
           disabled={pending}
           className="bg-shy-moment/90 hover:bg-shy-moment mt-1 rounded-md py-2 text-sm font-medium text-white transition-colors disabled:opacity-50"
         >
-          {pending ? 'Signing in…' : 'Sign in'}
+          {pending ? 'Creating account…' : 'Create account'}
         </button>
 
         <p className="text-muted-foreground text-center text-sm">
-          Don&apos;t have an account?{' '}
-          <Link href="/register" className="text-shy-moment hover:underline">
-            Create one
+          Already have an account?{' '}
+          <Link href="/login" className="text-shy-moment hover:underline">
+            Sign in
           </Link>
         </p>
       </form>

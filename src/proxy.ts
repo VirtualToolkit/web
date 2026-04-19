@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server'
 
 const PROTECTED = ['/dashboard']
 
-const GUEST_ONLY = ['/login']
+const GUEST_ONLY = ['/login', '/register']
 
 const SESSION_COOKIE = 'vrt-session'
 

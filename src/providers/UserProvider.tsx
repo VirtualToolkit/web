@@ -11,6 +11,7 @@ interface UserContextValue {
   user: User | null
   isLoading: boolean
   login: (username: string, password: string) => Promise<void>
+  register: (username: string, password: string) => Promise<void>
   logout: () => Promise<void>
 }
 
@@ -37,13 +38,24 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     setUser(await res.json())
   }, [])
 
+  const register = useCallback(async (username: string, password: string) => {
+    const res = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password }),
+    })
+    const data = await res.json()
+    if (!res.ok) throw new Error(data.error ?? 'Registration failed')
+    setUser(data)
+  }, [])
+
   const logout = useCallback(async () => {
     await fetch('/api/auth/logout', { method: 'POST' })
     setUser(null)
   }, [])
 
   return (
-    <UserContext.Provider value={{ user, isLoading, login, logout }}>
+    <UserContext.Provider value={{ user, isLoading, login, register, logout }}>
       {children}
     </UserContext.Provider>
   )
