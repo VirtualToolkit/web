@@ -23,8 +23,6 @@ export async function POST(request: Request) {
   })
 
   try {
-    // Use getCurrentUser directly instead of login() — login() automatically calls the 2FA
-    // verify endpoints with an empty code when none is provided, gets an error, and returns it.
     const result = await client.getCurrentUser({
       credentials: 'omit',
       headers: {

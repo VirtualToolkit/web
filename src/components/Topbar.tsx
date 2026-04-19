@@ -13,7 +13,6 @@ function AvatarThumb({ src, seed }: { src: string | null; seed: string }) {
    const fallback = `https://api.dicebear.com/9.x/thumbs/svg?seed=${seed}`
    return (
       <span className="block h-7 w-7 shrink-0 overflow-hidden rounded-full">
-         {/* eslint-disable-next-line @next/next/no-img-element */}
          <img
             src={(!err && src) ? src : fallback}
             alt="Profile"

@@ -9,16 +9,6 @@ const APP_CONFIG = {
   },
 } as const
 
-/**
- * Returns an authenticated VRChat client for the given user, or null if they
- * have no linked VRChat account. Use this in API routes to call the VRChat API
- * on behalf of the user.
- *
- * The client's keyv store is backed by the cookie data saved in the database.
- * Any cookie refreshes that occur during the request are NOT automatically
- * persisted — call `saveVRChatClient(userId, cookieStore)` after your request
- * if you need to persist updated cookies.
- */
 export async function getVRChatClient(
   userId: string,
 ): Promise<{ client: VRChat; cookieStore: Map<string, unknown> } | null> {

@@ -25,7 +25,6 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
         <SidebarGroup label="VRChat" icon={Gamepad} collapsed={collapsed}>
           <SidebarButton label="Instance" icon={HardDrive} link="/dashboard/vrchat/instance" />
           <SidebarButton label="Social" icon={BookUser} link="/dashboard/vrchat/social" />
-          {/* <SidebarButton label="Avatar Search" icon={UserSearch} link="/dashboard" /> TODO: investigate a better way to do this */}
         </SidebarGroup>
         <SidebarButton label="Wrist Overlay" icon={Watch} link="/dashboard" />
       </nav>

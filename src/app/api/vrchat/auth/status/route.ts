@@ -33,7 +33,6 @@ export async function GET() {
       currentAvatarImageUrl = (data.currentAvatarImageUrl as string) ?? null
     }
   } catch {
-    // non-fatal — avatar URL is best-effort
   }
 
   return NextResponse.json({

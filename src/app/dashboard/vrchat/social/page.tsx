@@ -47,7 +47,6 @@ function AvatarThumb({ src, name }: { src?: string; name: string }) {
   }
   return (
     <span className="block size-8 shrink-0 overflow-hidden rounded-full">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={src}
         alt={name}
@@ -76,7 +75,6 @@ export default function VRChatSocialPage() {
   useEffect(() => {
     if (!isConnected) return
     fetchFriends(showOffline)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isConnected, showOffline])
 
   if (authLoading) {
