@@ -10,8 +10,9 @@ export type HelloMessage = Envelope<
   "hello",
   {
     version: string;
-
     features: string[];
+    displayName?: string;
+    userId?: string;
   }
 >;
 
