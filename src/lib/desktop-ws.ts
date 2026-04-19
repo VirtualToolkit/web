@@ -36,7 +36,7 @@ export async function handleDesktopConnection(ws: WebSocket, req: IncomingMessag
       case "heartbeat":
         break;
 
-      case "hello":
+      case "hello": {
         broadcastToUser(
           userId,
           makeMessage("desktop_connected", {
@@ -44,7 +44,18 @@ export async function handleDesktopConnection(ws: WebSocket, req: IncomingMessag
             features: msg.data.features,
           }),
         );
+        if (msg.data.displayName) {
+          addPlayer(userId, msg.data.displayName, msg.data.userId);
+          broadcastToUser(
+            userId,
+            makeMessage("player_joined", {
+              displayName: msg.data.displayName,
+              userId: msg.data.userId,
+            }),
+          );
+        }
         break;
+      }
 
       case "player_joined":
         addPlayer(userId, msg.data.displayName, msg.data.userId);

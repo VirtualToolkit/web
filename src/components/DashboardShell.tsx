@@ -2,6 +2,9 @@
 
 import { useState } from "react";
 import Sidebar from "./Sidebar";
+import DevPanel from "./DevPanel";
+
+const isDev = process.env.NODE_ENV !== "production";
 
 export default function DashboardShell({ children }: { children: React.ReactNode }) {
   const [collapsed, setCollapsed] = useState(false);
@@ -15,6 +18,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
       >
         <div className="p-6">{children}</div>
       </div>
+      {isDev && <DevPanel />}
     </div>
   );
 }
